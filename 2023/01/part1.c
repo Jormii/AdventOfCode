@@ -9,10 +9,9 @@
 int main()
 {
     FILE *file = fopen("input.txt", "r");
-    int DIGITS[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
     int sum = 0;
-    int c = fgetc(file);
+    char c = fgetc(file);
     while (c != EOF)
     {
         while (!CHAR_IS_NUM(c))
@@ -35,7 +34,7 @@ int main()
         }
         c = fgetc(file);
 
-        sum += 10 * DIGITS[first - '0'] + DIGITS[last - '0'];
+        sum += 10 * (first - '0') + (last - '0');
     }
 
     fclose(file);
