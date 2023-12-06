@@ -5,6 +5,7 @@ from subprocess import PIPE
 
 DAY = 1
 YEAR = 2023
+BIGBOY = False
 EXECUTIONS = 100
 
 assert os.name == "posix"
@@ -19,6 +20,9 @@ for part in [1, 2]:
         "-Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op " \
         "-Wmissing-declarations -Wmissing-include-dirs -Wredundant-decls -Wshadow " \
         "-Wsign-conversion -Wstrict-overflow -Wswitch-default -Wundef -Werror"
+
+    if BIGBOY:
+        COMPILE_CMD = f"{COMPILE_CMD} -D BIGBOY"
 
     print(f"Part {part}: ", end="")
 
