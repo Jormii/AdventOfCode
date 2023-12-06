@@ -1,13 +1,22 @@
-/**
- * SOLUTION = 84399773
- */
-
 #include <stdio.h>
+
+#ifndef BIGBOY
+//
+#define INPUT "input.txt"
+#define SOLUTION (84399773)
+
+#define SCHEMATIC_WIDTH (140)
+#else
+//
+#define INPUT "bigboy.txt"
+#define SOLUTION (17158526595)
+
+#define SCHEMATIC_WIDTH (5000)
+#endif
 
 #define NO_CHAR (-1)
 #define ADJ_LIMIT (2)
 #define ROWS_COUNT (4)
-#define SCHEMATIC_WIDTH (140)
 #define MIN(x, y) (((x) <= (y)) ? (x) : (y))
 #define MAX(x, y) (((x) >= (y)) ? (x) : (y))
 #define CHAR_IS_NUM(c) ((c) >= '0' && (c) <= '9')
@@ -15,7 +24,7 @@
 typedef struct Cell_st
 {
     char character; // Or digit
-    unsigned char number_begin, number_end;
+    int number_begin, number_end;
 
     unsigned char adj_count;
     const struct Cell_st *adjacent[ADJ_LIMIT];
@@ -25,12 +34,12 @@ typedef struct Cell_st
 void clear_row(Cell *row);
 void parse_row(Cell *row, Cell *upper_row, Cell *lower_row, char *out_c, FILE *file);
 
-int calculate_row_sum(const Cell *row);
+long calculate_row_sum(const Cell *row);
 int parse_cell_number(const Cell *cell, const Cell *row);
 
 int main()
 {
-    FILE *file = fopen("input.txt", "r");
+    FILE *file = fopen(INPUT, "r");
 
     Cell rows[ROWS_COUNT][SCHEMATIC_WIDTH];
     for (int i = 0; i < ROWS_COUNT - 1; ++i)
@@ -43,7 +52,7 @@ int main()
     parse_row(rows[1], rows[0], rows[2], &c, file);
 
     int i = 2;
-    int sum = 0;
+    long sum = 0;
     for (; c != EOF; ++i)
     {
         Cell *to_calculate = rows[(i - 2) % ROWS_COUNT];
@@ -60,9 +69,11 @@ int main()
     sum += calculate_row_sum(rows[(i - 1) % ROWS_COUNT]);
 
     fclose(file);
-    printf("%d\n", sum);
 
-    return 0;
+    int success = sum == SOLUTION;
+    printf("Solution: %ld (%d)\n", sum, success);
+
+    return (success) ? 0 : 1;
 }
 
 void clear_row(Cell *row)
@@ -85,8 +96,8 @@ void parse_row(Cell *row, Cell *upper_row, Cell *lower_row, char *out_c, FILE *f
     {
         if (CHAR_IS_NUM(c))
         {
-            unsigned char number_begin = i;
-            unsigned char number_end = number_begin;
+            int number_begin = i;
+            int number_end = number_begin;
 
             for (; CHAR_IS_NUM(c); ++i, ++number_end)
             {
@@ -129,9 +140,9 @@ void parse_row(Cell *row, Cell *upper_row, Cell *lower_row, char *out_c, FILE *f
     *out_c = fgetc(file);
 }
 
-int calculate_row_sum(const Cell *row)
+long calculate_row_sum(const Cell *row)
 {
-    int row_sum = 0;
+    long row_sum = 0;
     for (int i = 0; i < SCHEMATIC_WIDTH; ++i)
     {
         const Cell *cell = row + i;
