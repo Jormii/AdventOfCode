@@ -1,8 +1,14 @@
-/**
- * SOLUTION = 2406
- */
-
 #include <stdio.h>
+
+#ifndef BIGBOY
+//
+#define INPUT "input.txt"
+#define SOLUTION (2406)
+#else
+//
+#define INPUT "bigboy.txt"
+#define SOLUTION (71327370192)
+#endif
 
 #define R_TOTAL (12)
 #define G_TOTAL (13)
@@ -17,9 +23,9 @@ RGB parse_set(char *out_c, FILE *file);
 
 int main()
 {
-    FILE *file = fopen("input.txt", "r");
+    FILE *file = fopen(INPUT, "r");
 
-    int sum = 0;
+    long sum = 0;
     char c = fgetc(file);
     for (int game = 1; c != EOF; ++game)
     {
@@ -56,9 +62,11 @@ int main()
     }
 
     fclose(file);
-    printf("%d\n", sum);
 
-    return 0;
+    int success = sum == SOLUTION;
+    printf("Solution: %ld (%d)\n", sum, success);
+
+    return (success) ? 0 : 1;
 }
 
 RGB parse_set(char *out_c, FILE *file)

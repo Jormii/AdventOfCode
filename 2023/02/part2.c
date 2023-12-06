@@ -1,8 +1,14 @@
-/**
- * SOLUTION = 78375
- */
-
 #include <stdio.h>
+
+#ifndef BIGBOY
+//
+#define INPUT "input.txt"
+#define SOLUTION (78375)
+#else
+//
+#define INPUT "bigboy.txt"
+#define SOLUTION (2221048073)
+#endif
 
 #define MAX(x, y) (((x) >= (y)) ? (x) : (y))
 
@@ -15,9 +21,9 @@ RGB parse_set(char *out_c, FILE *file);
 
 int main()
 {
-    FILE *file = fopen("input.txt", "r");
+    FILE *file = fopen(INPUT, "r");
 
-    int sum = 0;
+    long sum = 0;
     char c = fgetc(file);
     while (c != EOF)
     {
@@ -49,9 +55,11 @@ int main()
     }
 
     fclose(file);
-    printf("%d\n", sum);
 
-    return 0;
+    int success = sum == SOLUTION;
+    printf("Solution: %ld (%d)\n", sum, success);
+
+    return (success) ? 0 : 1;
 }
 
 RGB parse_set(char *out_c, FILE *file)
