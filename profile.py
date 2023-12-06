@@ -16,10 +16,11 @@ os.chdir(os.path.join(f"{YEAR}", f"{DAY:02}"))
 for part in [1, 2]:
     PATTERN = r"[\.\d]+"
     RUN_ARGS = ["time", "-f", "\"%e3\"", "./a.out"]
-    COMPILE_CMD = f"gcc part{part}.c -O2 -pedantic -Wall -Wextra -Wcast-align " \
-        "-Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op " \
-        "-Wmissing-declarations -Wmissing-include-dirs -Wredundant-decls -Wshadow " \
-        "-Wsign-conversion -Wstrict-overflow -Wswitch-default -Wundef -Werror"
+    COMPILE_CMD = f"gcc part{part}.c -O2 -lm " \
+        "-pedantic -Wall -Wextra -Wcast-align -Wcast-qual -Wdisabled-optimization " \
+        "-Wformat=2 -Winit-self -Wlogical-op -Wmissing-declarations " \
+        "-Wmissing-include-dirs -Wredundant-decls -Wshadow -Wsign-conversion " \
+        "-Wstrict-overflow -Wswitch-default -Wundef -Werror"
 
     if BIGBOY:
         COMPILE_CMD = f"{COMPILE_CMD} -D BIGBOY"
@@ -28,11 +29,13 @@ for part in [1, 2]:
 
     process = subprocess.run(COMPILE_CMD.split(" "), stdout=PIPE, stderr=PIPE)
     if process.returncode != 0:
-        exit(f"GCC $?={process.returncode}\n{process.stderr.decode()}\n")
+        print(f"GCC $?={process.returncode}\n{process.stderr.decode()}")
+        continue
 
     process = subprocess.run(RUN_ARGS, stdout=PIPE, stderr=PIPE)
     if process.returncode != 0:
-        exit(f"Run $?={process.returncode}\n{process.stderr.decode()}\n")
+        print(f"Run $?={process.returncode}")
+        continue
 
     time = 0
     for i in range(EXECUTIONS):
