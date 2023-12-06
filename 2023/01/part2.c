@@ -1,8 +1,14 @@
-/**
- * SOLUTION = 55652
- */
-
 #include <stdio.h>
+
+#ifndef BIGBOY
+//
+#define INPUT "input.txt"
+#define SOLUTION (55652)
+#else
+//
+#define INPUT "bigboy.txt"
+#define SOLUTION (55015199)
+#endif
 
 #define NO_NUM (-1)
 #define BUFFER_SIZE (64)
@@ -27,7 +33,7 @@ int is_digit_str(int digit, int buffer_idx, int offset);
 
 int main()
 {
-    FILE *file = fopen("input.txt", "r");
+    FILE *file = fopen(INPUT, "r");
 
     int sum = 0;
     char c = fgetc(file);
@@ -63,10 +69,10 @@ int main()
         sum += 10 * first + last;
     }
 
-    fclose(file);
-    printf("%d\n", sum);
+    int success = sum == SOLUTION;
+    printf("Solution: %d (%d)\n", sum, success);
 
-    return 0;
+    return (success) ? 0 : 1;
 }
 
 int get_num(int buffer_idx)

@@ -1,14 +1,20 @@
-/**
- * SOLUTION = 56108
- */
-
 #include <stdio.h>
+
+#ifndef BIGBOY
+//
+#define INPUT "input.txt"
+#define SOLUTION (56108)
+#else
+//
+#define INPUT "bigboy.txt"
+#define SOLUTION (55022487)
+#endif
 
 #define CHAR_IS_NUM(c) ((c) >= '0' && (c) <= '9')
 
 int main()
 {
-    FILE *file = fopen("input.txt", "r");
+    FILE *file = fopen(INPUT, "r");
 
     int sum = 0;
     char c = fgetc(file);
@@ -38,7 +44,9 @@ int main()
     }
 
     fclose(file);
-    printf("%d\n", sum);
 
-    return 0;
+    int success = sum == SOLUTION;
+    printf("Solution: %d (%d)\n", sum, success);
+
+    return (success) ? 0 : 1;
 }
