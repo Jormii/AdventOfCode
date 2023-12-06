@@ -1,0 +1,12 @@
+H/W path       Device     Class          Description
+====================================================
+/0/0                      memory         64KiB BIOS
+/0/3a                     memory         16GiB System Memory
+/0/3a/0                   memory         8GiB DIMM DDR4 Synchronous 2400 MHz (0.4 ns)
+/0/3a/1                   memory         8GiB DIMM DDR4 Synchronous 2400 MHz (0.4 ns)
+/0/3a/2                   memory         [empty]
+/0/3a/3                   memory         [empty]
+/0/44                     memory         256KiB L1 cache
+/0/45                     memory         1MiB L2 cache
+/0/46                     memory         6MiB L3 cache
+/0/100/14.2               memory         RAM memory

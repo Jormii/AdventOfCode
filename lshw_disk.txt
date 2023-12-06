@@ -1,0 +1,3 @@
+H/W path       Device     Class          Description
+====================================================
+/0/b/0.0.0     /dev/sda   disk           2TB ST2000DM006-2DM1
