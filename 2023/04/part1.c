@@ -1,11 +1,20 @@
-/**
- * SOLUTION = 20117
- */
-
 #include <stdio.h>
+
+#ifndef BIGBOY
+//
+#define INPUT "input.txt"
+#define SOLUTION (20117)
 
 #define WINNING_NUMBERS (10)
 #define PLAYING_NUMBERS (25)
+#else
+//
+#define INPUT "bigboy.txt"
+#define SOLUTION (1475828)
+
+#define WINNING_NUMBERS (20)
+#define PLAYING_NUMBERS (50)
+#endif
 
 int winning[WINNING_NUMBERS];
 int playing[PLAYING_NUMBERS];
@@ -15,7 +24,7 @@ void insert_ordered(int number, int *array, int arrlen);
 
 int main()
 {
-    FILE *file = fopen("input.txt", "r");
+    FILE *file = fopen(INPUT, "r");
 
     int sum = 0;
     char c = fgetc(file);
@@ -51,9 +60,11 @@ int main()
     }
 
     fclose(file);
-    printf("%d\n", sum);
 
-    return 0;
+    int success = sum == SOLUTION;
+    printf("Solution: %d (%d)\n", sum, success);
+
+    return (success) ? 0 : 1;
 }
 
 void parse_row(char *out_c, FILE *file)
