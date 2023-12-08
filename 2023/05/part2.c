@@ -1,10 +1,19 @@
-/**
- * SOLUTION = 37806486
- */
-
 #include <stdio.h>
 
-#define RANGES_COUNT (10)
+#ifndef BIGBOY
+//
+#define INPUT "input.txt"
+#define SOLUTION (37806486)
+
+#define RANGES_COUNT (20 >> 1)
+#else
+//
+#define INPUT "bigboy.txt"
+#define SOLUTION (100062714)
+
+#define RANGES_COUNT (256 >> 1)
+#endif
+
 #define MAX_ARRLEN (2187 * RANGES_COUNT) // 3^7 * N (7=mapping sections)
 #define MIN(x, y) (((x) <= (y)) ? (x) : (y))
 #define MAX(x, y) (((x) >= (y)) ? (x) : (y))
@@ -34,7 +43,7 @@ Intersection intersect_ranges(long r_begin, long r_end, long m_begin, long m_end
 
 int main()
 {
-    FILE *file = fopen("input.txt", "r");
+    FILE *file = fopen(INPUT, "r");
 
     char c = fgetc(file);
     while (c != ':')
@@ -136,9 +145,11 @@ int main()
     }
 
     fclose(file);
-    printf("%ld\n", location);
 
-    return 0;
+    int success = location == SOLUTION;
+    printf("Solution: %ld (%d)\n", location, success);
+
+    return (success) ? 0 : 1;
 }
 
 long parse_number(char *out_c, FILE *file)

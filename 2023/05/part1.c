@@ -1,10 +1,19 @@
-/**
- * SOLUTION = 1181555926
- */
-
 #include <stdio.h>
 
+#ifndef BIGBOY
+//
+#define INPUT "input.txt"
+#define SOLUTION (1181555926)
+
 #define SEED_COUNT (20)
+#else
+//
+#define INPUT "bigboy.txt"
+#define SOLUTION (11056616)
+
+#define SEED_COUNT (256)
+#endif
+
 #define MIN(x, y) (((x) <= (y)) ? (x) : (y))
 #define CHAR_IS_NUM(c) ((c) >= '0' && (c) <= '9')
 
@@ -24,7 +33,7 @@ Mapping parse_row(char *out_c, FILE *file);
 
 int main()
 {
-    FILE *file = fopen("input.txt", "r");
+    FILE *file = fopen(INPUT, "r");
 
     char c = fgetc(file);
     while (c != ':')
@@ -80,9 +89,11 @@ int main()
     }
 
     fclose(file);
-    printf("%ld\n", location);
 
-    return 0;
+    int success = location == SOLUTION;
+    printf("Solution: %ld (%d)\n", location, success);
+
+    return (success) ? 0 : 1;
 }
 
 long parse_number(char *out_c, FILE *file)
