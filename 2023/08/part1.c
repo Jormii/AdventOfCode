@@ -5,15 +5,17 @@
 #define INPUT "input.txt"
 #define SOLUTION (16409)
 
+#define INSTRUCTIONS_ARRLEN (512)
 #else
 //
 #define INPUT "bigboy.txt"
-#define SOLUTION (-1)
+#define SOLUTION (1488003)
+
+#define INSTRUCTIONS_ARRLEN (2 << 20)
 #endif
 
 #define BASE ('Z' - 'A' + 1)
 #define NODES_ARRLEN (BASE * BASE * BASE)
-#define INSTRUCTIONS_ARRLEN (512)
 
 typedef enum Direction_en
 {

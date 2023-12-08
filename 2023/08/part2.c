@@ -5,15 +5,17 @@
 #define INPUT "input.txt"
 #define SOLUTION (11795205644011)
 
+#define INSTRUCTIONS_ARRLEN (512)
 #else
 //
 #define INPUT "bigboy.txt"
-#define SOLUTION (-1)
+#define SOLUTION (2214154416012)
+
+#define INSTRUCTIONS_ARRLEN (2 << 20)
 #endif
 
 #define BASE ('Z' - 'A' + 1)
 #define NODES_ARRLEN (BASE * BASE * BASE)
-#define INSTRUCTIONS_ARRLEN (512)
 #define STARTING_INDICES_ARRLEN (BASE * BASE)
 #define MIN(x, y) (((x) <= (y)) ? (x) : (y))
 #define MAX(x, y) (((x) >= (y)) ? (x) : (y))
