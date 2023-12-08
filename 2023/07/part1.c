@@ -9,7 +9,9 @@
 #else
 //
 #define INPUT "bigboy.txt"
-#define SOLUTION (-1)
+#define SOLUTION (6678229757944529)
+
+#define HANDS_COUNT (200000)
 #endif
 
 #define HAND_SIZE (5)
@@ -68,17 +70,17 @@ int main()
         hands[i] = parse_hand(&c, file);
     }
 
-    long sum = 0;
+    size_t sum = 0;
     heap_sort(hands);
-    for (int i = 0; i < HANDS_COUNT; ++i)
+    for (size_t i = 0; i < HANDS_COUNT; ++i)
     {
-        sum += (i + 1) * hands[i].bid;
+        sum += (i + 1) * (size_t)(hands[i].bid);
     }
 
     fclose(file);
 
     int success = sum == SOLUTION;
-    printf("Solution: %ld (%d)\n", sum, success);
+    printf("Solution: %lu (%d)\n", sum, success);
 
     return (success) ? 0 : 1;
 }
