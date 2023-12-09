@@ -5,24 +5,26 @@
 #define INPUT "input.txt"
 #define SOLUTION (1974913025)
 
+#define BUFFER_LEN (128)
 #else
 //
 #define INPUT "bigboy.txt"
-#define SOLUTION (-1)
+#define SOLUTION (8137764536324356)
+
+#define BUFFER_LEN (512)
 #endif
 
-#define BUFFER_LEN (128)
 #define CHAR_IS_NUM(c) ((c) >= '0' && (c) <= '9')
 
-int buffer[BUFFER_LEN];
+long buffer[BUFFER_LEN];
 
-int predict(char *out_c, FILE *file);
+long predict(char *out_c, FILE *file);
 
 int main()
 {
     FILE *file = fopen(INPUT, "r");
 
-    int sum = 0;
+    long sum = 0;
     char c = fgetc(file);
     while (c != EOF)
     {
@@ -32,12 +34,12 @@ int main()
     fclose(file);
 
     int success = sum == SOLUTION;
-    printf("Solution: %d (%d)\n", sum, success);
+    printf("Solution: %ld (%d)\n", sum, success);
 
     return (success) ? 0 : 1;
 }
 
-int predict(char *out_c, FILE *file)
+long predict(char *out_c, FILE *file)
 {
     char c = *out_c;
 
@@ -45,7 +47,7 @@ int predict(char *out_c, FILE *file)
     while (1)
     {
         int sign = 1;
-        int number = 0;
+        long number = 0;
         if (c == '-')
         {
             sign = -1;
@@ -85,7 +87,7 @@ int predict(char *out_c, FILE *file)
         ++step;
     }
 
-    int prediction = buffer[arrlen - step];
+    long prediction = buffer[arrlen - step];
     for (int i = step - 1; i > 0; --i)
     {
         int end = arrlen - i;
