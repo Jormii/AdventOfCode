@@ -5,14 +5,17 @@
 #define INPUT "input.txt"
 #define SOLUTION (34911)
 
+#define WIDTH (18)
+#define HEIGHT (18)
 #else
 //
 #define INPUT "bigboy.txt"
-#define SOLUTION (-1)
+#define SOLUTION (15205432)
+
+#define WIDTH (200)
+#define HEIGHT (200)
 #endif
 
-#define WIDTH (18)
-#define HEIGHT (18)
 #define PATTERN_SIZE (WIDTH * HEIGHT)
 #define IDX(row, width, col) ((width) * (row) + (col))
 
