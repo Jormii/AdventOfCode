@@ -5,13 +5,14 @@
 #define INPUT "input.txt"
 #define SOLUTION (109939)
 
+#define WIDTH (100)
 #else
 //
 #define INPUT "bigboy.txt"
-#define SOLUTION (-1)
-#endif
+#define SOLUTION (101231625)
 
-#define WIDTH (100)
+#define WIDTH (1000)
+#endif
 
 typedef struct ParsedRow_st
 {

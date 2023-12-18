@@ -5,15 +5,19 @@
 #define INPUT "input.txt"
 #define SOLUTION (101010)
 
-#else
-//
-#define INPUT "bigboy.txt"
-#define SOLUTION (-1)
-#endif
-
 #define WIDTH (100)
 #define HEIGHT (100)
 #define CACHE_SIZE (200)
+#else
+//
+#define INPUT "bigboy.txt"
+#define SOLUTION (97947387)
+
+#define WIDTH (1000)
+#define HEIGHT (1000)
+#define CACHE_SIZE (4000)
+#endif
+
 #define CYCLES (1000000000)
 #define CYCLE()        \
     {                  \
