@@ -1,18 +1,20 @@
 #include <stdio.h>
-#include <stdlib.h> // TODO: Remove
+#include <stdlib.h> // TODO: It's a sin
 
 #ifndef BIGBOY
 //
 #define INPUT "input.txt"
 #define SOLUTION (245223)
 
+#define LIST_LENGTH (8)
 #else
 //
 #define INPUT "bigboy.txt"
-#define SOLUTION (-1)
+#define SOLUTION (1)
+
+#define LIST_LENGTH (2 << 15)
 #endif
 
-#define LIST_LENGTH (8)
 #define HASHMAP_SIZE (256)
 
 typedef struct Lens_st

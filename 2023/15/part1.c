@@ -8,7 +8,7 @@
 #else
 //
 #define INPUT "bigboy.txt"
-#define SOLUTION (-1)
+#define SOLUTION (13134060)
 #endif
 
 int calculate_hash(char *out_c, FILE *file);
