@@ -5,14 +5,16 @@
 #define INPUT "input.txt"
 #define SOLUTION (7025)
 
+#define GROUPS_LEN (6)
+#define SPRINGS_LEN (20)
 #else
 //
 #define INPUT "bigboy.txt"
-#define SOLUTION (-1)
-#endif
+#define SOLUTION (27648)
 
-#define GROUPS_LEN (6)
-#define SPRINGS_LEN (20)
+#define GROUPS_LEN (100)
+#define SPRINGS_LEN (1501)
+#endif
 
 int groups[GROUPS_LEN];
 char springs[SPRINGS_LEN];
