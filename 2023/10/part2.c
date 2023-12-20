@@ -3,7 +3,7 @@
 #ifndef BIGBOY
 //
 #define INPUT "input.txt"
-#define SOLUTION (6947)
+#define SOLUTION (273)
 
 #define WIDTH (140)
 #define HEIGHT (140)
@@ -49,7 +49,13 @@ typedef struct PipeData_st
     Direction outcoming[_DIRECTIONS_COUNT_];
 } PipeData;
 
-Pipe maze[MAZE_SIZE];
+typedef struct Cell_st
+{
+    Pipe pipe;
+    int main_loop;
+} Cell;
+
+Cell maze[MAZE_SIZE];
 int start_row, start_column;
 
 PipeData pipes[_PIPES_COUNT_];
@@ -62,6 +68,7 @@ Offset offsets[_DIRECTIONS_COUNT_] = {
 
 void parse_row(int row, char *out_c, FILE *file);
 int explore_maze(Pipe start_pipe, Direction moving);
+int count_enclosed();
 
 int main()
 {
@@ -121,12 +128,12 @@ int main()
         }
     }
 
-    int farthest = loop_length / 2;
+    int enclosed = count_enclosed();
 
     fclose(file);
 
-    int success = farthest == SOLUTION;
-    printf("Solution: %d (%d)\n", farthest, success);
+    int success = enclosed == SOLUTION;
+    printf("Solution: %d (%d)\n", enclosed, success);
 
     return (success) ? 0 : 1;
 }
@@ -134,37 +141,40 @@ int main()
 void parse_row(int row, char *out_c, FILE *file)
 {
     char c = *out_c;
-    Pipe *pipe = maze + IDX(row, 0);
-    for (int column = 0; column < WIDTH; ++column, ++pipe)
+    Cell *cell = maze + IDX(row, 0);
+    for (int column = 0; column < WIDTH; ++column, ++cell)
     {
+        cell->main_loop = 0;
+
         switch (c)
         {
         case 'S':
             start_row = row;
             start_column = column;
 
-            *pipe = START;
+            cell->pipe = START;
+            cell->main_loop = 1;
             break;
         case '.':
-            *pipe = GROUND;
+            cell->pipe = GROUND;
             break;
         case '|':
-            *pipe = VERTICAL;
+            cell->pipe = VERTICAL;
             break;
         case '-':
-            *pipe = HORIZONTAL;
+            cell->pipe = HORIZONTAL;
             break;
         case 'L':
-            *pipe = NE;
+            cell->pipe = NE;
             break;
         case 'J':
-            *pipe = NW;
+            cell->pipe = NW;
             break;
         case '7':
-            *pipe = SW;
+            cell->pipe = SW;
             break;
         case 'F':
-            *pipe = SE;
+            cell->pipe = SE;
             break;
         default:
             break;
@@ -184,7 +194,10 @@ int explore_maze(Pipe start_pipe, Direction moving)
         return MAZE_SIZE;
     }
 
-    maze[IDX(start_row, start_column)] = start_pipe;
+    Cell *start_cell = maze + IDX(start_row, start_column);
+
+    start_cell->main_loop = 1;
+    start_cell->pipe = start_pipe;
 
     int row = start_row + offsets[moving].row_offset;
     int column = start_column + offsets[moving].column_offset;
@@ -198,16 +211,17 @@ int explore_maze(Pipe start_pipe, Direction moving)
         }
         else
         {
-            Pipe pipe = maze[IDX(row, column)];
-            if (pipe == GROUND || !(pipes[pipe].compatible[moving]))
+            Cell *cell = maze + IDX(row, column);
+            if (cell->pipe == GROUND || !(pipes[cell->pipe].compatible[moving]))
             {
                 loop_length = MAZE_SIZE;
             }
             else
             {
                 ++loop_length;
+                cell->main_loop = 1;
 
-                moving = pipes[pipe].outcoming[moving];
+                moving = pipes[cell->pipe].outcoming[moving];
 
                 row += offsets[moving].row_offset;
                 column += offsets[moving].column_offset;
@@ -227,8 +241,66 @@ int explore_maze(Pipe start_pipe, Direction moving)
 
     if (loop_length == MAZE_SIZE)
     {
-        maze[IDX(start_row, start_column)] = START;
+        start_cell->pipe = START;
+        start_cell->main_loop = 1;
+
+        opposite = (moving + _DIRECTIONS_COUNT_ / 2) % _DIRECTIONS_COUNT_;
+
+        row += offsets[opposite].row_offset;
+        column += offsets[opposite].column_offset;
+        while (!(row == start_row && column == start_column))
+        {
+            Cell *cell = maze + IDX(row, column);
+
+            cell->main_loop = 0;
+            opposite = pipes[cell->pipe].outcoming[opposite];
+
+            row += offsets[opposite].row_offset;
+            column += offsets[opposite].column_offset;
+        }
     }
 
     return loop_length;
+}
+
+int count_enclosed()
+{
+    int enclosed = 0;
+
+    for (int row = 0; row < HEIGHT; ++row)
+    {
+        int intersections = 0;
+        for (int column = 0; column < WIDTH; ++column)
+        {
+            const Cell *cell = maze + IDX(row, column);
+            if (!(cell->main_loop))
+            {
+                enclosed += (intersections & 1);
+            }
+            else if (!(cell->pipe == NE || cell->pipe == SE))
+            {
+                ++intersections;
+            }
+            else
+            {
+                ++column;
+                const Cell *corner = cell + 1;
+                for (
+                    ;
+                    !(corner->pipe == NW || corner->pipe == SW);
+                    ++column, ++corner)
+                {
+                    ;
+                }
+
+                if ((cell->pipe == NE && corner->pipe == SW) ||
+                    (cell->pipe == SE && corner->pipe == NW))
+                {
+                    ++intersections;
+                }
+            }
+        }
+    }
+
+    return enclosed;
 }
