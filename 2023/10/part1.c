@@ -10,7 +10,10 @@
 #else
 //
 #define INPUT "bigboy.txt"
-#define SOLUTION (-1)
+#define SOLUTION (5016002)
+
+#define WIDTH (1002)
+#define HEIGHT (15002)
 #endif
 
 #define MAZE_SIZE (WIDTH * HEIGHT)
