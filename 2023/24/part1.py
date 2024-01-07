@@ -34,7 +34,7 @@ def main() -> int:
     success = solution == SOLUTION
     print(f"Solution: {solution} ({success})")
 
-    return success
+    return 0 if success else 1
 
 
 def parse_row(line: str) -> Tuple[np.ndarray, np.ndarray]:
