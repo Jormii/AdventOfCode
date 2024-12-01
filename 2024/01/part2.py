@@ -1,4 +1,6 @@
 import os
+import sys
+import time
 from typing import Dict
 
 SOLUTION = 29379307
@@ -6,6 +8,7 @@ INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'input.txt')
 
 
 def main() -> int:
+    t = time.perf_counter()
     with open(INPUT_FILE) as fd:
         lines = fd.readlines()
 
@@ -32,7 +35,10 @@ def main() -> int:
         if l_value in right_counter:
             similarity += l_value * l_value_counter * right_counter[l_value]
 
+    tf = time.perf_counter()
+
     success = similarity == SOLUTION
+    print(tf - t, file=sys.stderr)
     print(f'Solution: {similarity} ({success})')
 
     return 0 if success else 1

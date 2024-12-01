@@ -1,10 +1,13 @@
 import os
+import sys
+import time
 
 SOLUTION = 3246517
 INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'input.txt')
 
 
 def main() -> int:
+    t = time.perf_counter()
     with open(INPUT_FILE) as fd:
         lines = fd.readlines()
 
@@ -26,7 +29,10 @@ def main() -> int:
     for l_value, r_value in zip(left, right, strict=True):
         distance += abs(l_value - r_value)
 
+    tf = time.perf_counter()
+
     success = distance == SOLUTION
+    print(tf - t, file=sys.stderr)
     print(f'Solution: {distance} ({success})')
 
     return 0 if success else 1

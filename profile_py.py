@@ -12,17 +12,9 @@ assert os.name == 'posix'
 print(f'--- {DAY} / {YEAR} ---')
 
 for part in [1, 2]:
-    PATTERN = rf'([.0-9]+) part{part}.py:\d+\(main\)'
-    RUN_ARGS = [
-        'python',
-        '-m',
-        'cProfile',
-        '-s',
-        'cumtime',
-        f'{YEAR}/{DAY:02}/part{part}.py'
-    ]
+    RUN_ARGS = ['python', f'{YEAR}/{DAY:02}/part{part}.py']
 
-    print(f'Part {part} ({" ".join(RUN_ARGS)}): ', end='')
+    print(f'Part {part}: ', end='')
 
     process = subprocess.run(RUN_ARGS, stdout=PIPE, stderr=PIPE)
     if process.returncode != 0:
@@ -33,10 +25,7 @@ for part in [1, 2]:
     for i in range(EXECUTIONS):
         process = subprocess.run(RUN_ARGS, stdout=PIPE, stderr=PIPE)
 
-        out = process.stdout.decode()
-        search = re.search(PATTERN, out)
-        assert search is not None
+        err = process.stderr.decode()
+        time += float(err)
 
-        time += float(search.group(1))
-
-    print(f'- {time / EXECUTIONS:.3f} s')
+    print(f'{time / EXECUTIONS:.6f} s')
