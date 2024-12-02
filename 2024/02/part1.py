@@ -1,19 +1,9 @@
 import os
 import sys
 import time
-from enum import IntEnum
 
 SOLUTION = 306
 INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'input.txt')
-
-
-class Tendency(IntEnum):
-    INC = 0
-    DEC = 1
-
-
-DIFF_LEAST = 1
-DIFF_MOST = 3
 
 
 def main() -> int:
@@ -26,24 +16,30 @@ def main() -> int:
 
             l0 = levels[0]
             lf = levels[1]
-            difference = abs(lf - l0)
-            tendency = Tendency.DEC if l0 > lf else Tendency.INC
-            if difference < DIFF_LEAST or difference > DIFF_MOST:
+
+            if l0 < lf:
+                lower_bound = 1
+                upper_bound = 3
+            else:
+                lower_bound = -3
+                upper_bound = -1
+
+            diff = lf - l0
+            if diff < lower_bound or diff > upper_bound:
                 continue
 
             safe = True
-            for i in range(1, len(levels) - 1):
-                l0 = levels[i]
-                lf = levels[i + 1]
+            for i in range(2, len(levels)):
+                l0 = lf
+                lf = levels[i]
 
-                difference = abs(lf - l0)
-                ith_tendency = Tendency.DEC if l0 > lf else Tendency.INC
-                if ith_tendency != tendency \
-                        or difference < DIFF_LEAST or difference > DIFF_MOST:
+                diff = lf - l0
+                if diff < lower_bound or diff > upper_bound:
                     safe = False
                     break
 
-            safe_reports += safe
+            if safe:
+                safe_reports += 1
 
     tf = time.perf_counter()
 
