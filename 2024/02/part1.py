@@ -28,17 +28,17 @@ def main() -> int:
             if diff < lower_bound or diff > upper_bound:
                 continue
 
-            safe = True
+            is_safe = True
             for i in range(2, len(levels)):
                 l0 = lf
                 lf = levels[i]
 
                 diff = lf - l0
                 if diff < lower_bound or diff > upper_bound:
-                    safe = False
+                    is_safe = False
                     break
 
-            if safe:
+            if is_safe:
                 safe_reports += 1
 
     tf = time.perf_counter()
