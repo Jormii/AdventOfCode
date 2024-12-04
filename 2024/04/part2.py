@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 import time
 from typing import List, Set, Tuple
@@ -10,10 +11,8 @@ INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'input.txt')
 MatrixT = List[List[int]]
 FindRetT = List[Tuple[int, int]]
 
-MAS = [ord('M'), ord('A'), ord('S')]
-
-MAS_LEN = len(MAS)
-MAS_REV = list(reversed(MAS))
+REGEX = r'(?=(MAS|SAM))'
+PATTERN = re.compile(REGEX)
 
 
 def main() -> int:
@@ -57,16 +56,13 @@ def main() -> int:
 def find(matrix: MatrixT) -> FindRetT:
     found: FindRetT = []
 
-    rows = len(matrix)
-    columns = len(matrix[0])
-    for r in range(rows):
-        for c in range(columns - MAS_LEN+1):
-            element = matrix[r][c]
+    for r, row in enumerate(matrix):
+        line = bytes(row).decode()
+        for match in PATTERN.finditer(line):
+            span = match.span()
 
-            if element == MAS[0] and matrix[r][c:c+MAS_LEN] == MAS:
-                found.append((r, c + 1))
-            elif element == MAS_REV[0] and matrix[r][c:c+MAS_LEN] == MAS_REV:
-                found.append((r, c + 1))
+            c = span[0]
+            found.append((r, c + 1))
 
     return found
 

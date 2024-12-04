@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 import time
 from typing import List, Tuple
@@ -9,10 +10,8 @@ INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'input.txt')
 
 MatrixT = List[List[int]]
 
-XMAS = [ord('X'), ord('M'), ord('A'), ord('S')]
-
-XMAS_LEN = len(XMAS)
-XMAS_REV = list(reversed(XMAS))
+REGEX = r'(?=(XMAS|SAMX))'
+PATTERN = re.compile(REGEX)
 
 
 def main() -> int:
@@ -44,16 +43,9 @@ def main() -> int:
 def find(matrix: MatrixT) -> int:
     total = 0
 
-    rows = len(matrix)
-    columns = len(matrix[0])
-    for r in range(rows):
-        for c in range(columns - XMAS_LEN+1):
-            element = matrix[r][c]
-
-            if element == XMAS[0] and matrix[r][c:c+XMAS_LEN] == XMAS:
-                total += 1
-            elif element == XMAS_REV[0] and matrix[r][c:c+XMAS_LEN] == XMAS_REV:
-                total += 1
+    for row in matrix:
+        line = bytes(row).decode()
+        total += len(PATTERN.findall(line))
 
     return total
 
