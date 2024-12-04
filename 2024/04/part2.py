@@ -59,9 +59,7 @@ def find(matrix: MatrixT) -> FindRetT:
     for r, row in enumerate(matrix):
         line = bytes(row).decode()
         for match in PATTERN.finditer(line):
-            span = match.span()
-
-            c = span[0]
+            c = match.start()
             found.append((r, c + 1))
 
     return found
