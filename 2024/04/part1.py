@@ -1,7 +1,7 @@
 import os
 import sys
 import time
-from typing import List
+from typing import List, Tuple
 
 SOLUTION = 2378
 INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'input.txt')
@@ -10,7 +10,10 @@ INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'input.txt')
 MatrixT = List[List[int]]
 
 XMAS = [ord('X'), ord('M'), ord('A'), ord('S')]
-XMAS_REVERSED = [ord('S'), ord('A'), ord('M'), ord('X')]
+
+XMAS_LEN = len(XMAS)
+XMAS_REV = list(reversed(XMAS))
+
 
 
 def main() -> int:
@@ -22,10 +25,13 @@ def main() -> int:
         for line in fd.readlines():
             matrix.append(list(map(ord, line)))
 
+    matrix_T = transpose(matrix)
+    rolled_left_T, rolled_right_T = roll_then_transpose(matrix)
+
     total += find(matrix)
-    total += find(transpose(matrix))
-    total += find(transpose(roll_left(matrix)))
-    total += find(transpose(roll_right(matrix)))
+    total += find(matrix_T)
+    total += find(rolled_left_T)
+    total += find(rolled_right_T)
 
     tf = time.perf_counter()
 
@@ -46,9 +52,9 @@ def find(matrix: MatrixT) -> int:
             element = matrix[r][c]
 
             if element == XMAS[0]:
-                total += matrix[r][c:c+len(XMAS)] == XMAS
-            elif element == XMAS_REVERSED[0]:
-                total += matrix[r][c:c+len(XMAS_REVERSED)] == XMAS_REVERSED
+                total += matrix[r][c:c+XMAS_LEN] == XMAS
+            elif element == XMAS_REV[0]:
+                total += matrix[r][c:c+XMAS_LEN] == XMAS_REV
 
     return total
 
@@ -57,8 +63,7 @@ def transpose(matrix: MatrixT) -> MatrixT:
     rows = len(matrix)
     columns = len(matrix[0])
 
-    transposed: MatrixT = []
-    transposed.extend([0]*rows for _ in range(columns))
+    transposed = [[0]*rows for _ in range(columns)]
 
     for r in range(rows):
         for c in range(columns):
@@ -67,32 +72,19 @@ def transpose(matrix: MatrixT) -> MatrixT:
     return transposed
 
 
-def roll_left(matrix: MatrixT) -> MatrixT:
+def roll_then_transpose(matrix: MatrixT) -> Tuple[MatrixT, MatrixT]:
     rows = len(matrix)
     columns = len(matrix[0])
 
-    rolled: MatrixT = []
+    rolled_left_T = [[0]*rows for _ in range(columns)]
+    rolled_right_T = [[0]*rows for _ in range(columns)]
+
     for r in range(rows):
-        rolled.append([0] * columns)
-
         for c in range(columns):
-            rolled[r][c] = matrix[r][(c + r) % columns]
+            rolled_left_T[c][r] = matrix[r][(c + r) % columns]
+            rolled_right_T[c][r] = matrix[r][c - r]
 
-    return rolled
-
-
-def roll_right(matrix: MatrixT) -> MatrixT:
-    rows = len(matrix)
-    columns = len(matrix[0])
-
-    rolled: MatrixT = []
-    for r in range(rows):
-        rolled.append([0] * columns)
-
-        for c in range(columns):
-            rolled[r][c] = matrix[r][c - r]
-
-    return rolled
+    return rolled_left_T, rolled_right_T
 
 
 if __name__ == '__main__':

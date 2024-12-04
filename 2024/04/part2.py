@@ -11,7 +11,9 @@ MatrixT = List[List[int]]
 FindRetT = List[Tuple[int, int]]
 
 MAS = [ord('M'), ord('A'), ord('S')]
-MAS_REVERSED = [ord('S'), ord('A'), ord('M')]
+
+MAS_LEN = len(MAS)
+MAS_REV = list(reversed(MAS))
 
 
 def main() -> int:
@@ -23,8 +25,10 @@ def main() -> int:
         for line in fd.readlines():
             matrix.append(list(map(ord, line)))
 
-    left_found = find(transpose(roll_left(matrix)))
-    right_found = find(transpose(roll_right(matrix)))
+    rolled_left_T, rolled_right_T = roll_then_transpose(matrix)
+
+    left_found = find(rolled_left_T)
+    right_found = find(rolled_right_T)
 
     rows = len(matrix)
     columns = len(matrix[0])
@@ -64,56 +68,27 @@ def find(matrix: MatrixT) -> FindRetT:
         for c in range(columns):
             element = matrix[r][c]
 
-            if element == MAS[0] \
-                    and matrix[r][c:c+len(MAS)] == MAS:
+            if element == MAS[0] and matrix[r][c:c+MAS_LEN] == MAS:
                 found.append((r, c + 1))
-            elif element == MAS_REVERSED[0]\
-                    and matrix[r][c:c+len(MAS_REVERSED)] == MAS_REVERSED:
+            elif element == MAS_REV[0] and matrix[r][c:c+MAS_LEN] == MAS_REV:
                 found.append((r, c + 1))
 
     return found
 
 
-def transpose(matrix: MatrixT) -> MatrixT:
+def roll_then_transpose(matrix: MatrixT) -> Tuple[MatrixT, MatrixT]:
     rows = len(matrix)
     columns = len(matrix[0])
 
-    transposed: MatrixT = []
-    transposed.extend([0]*rows for _ in range(columns))
+    rolled_left_T = [[0]*rows for _ in range(columns)]
+    rolled_right_T = [[0]*rows for _ in range(columns)]
 
     for r in range(rows):
         for c in range(columns):
-            transposed[c][r] = matrix[r][c]
+            rolled_left_T[c][r] = matrix[r][(c + r) % columns]
+            rolled_right_T[c][r] = matrix[r][c - r]
 
-    return transposed
-
-
-def roll_left(matrix: MatrixT) -> MatrixT:
-    rows = len(matrix)
-    columns = len(matrix[0])
-
-    rolled: MatrixT = []
-    for r in range(rows):
-        rolled.append([0] * columns)
-
-        for c in range(columns):
-            rolled[r][c] = matrix[r][(c + r) % columns]
-
-    return rolled
-
-
-def roll_right(matrix: MatrixT) -> MatrixT:
-    rows = len(matrix)
-    columns = len(matrix[0])
-
-    rolled: MatrixT = []
-    for r in range(rows):
-        rolled.append([0] * columns)
-
-        for c in range(columns):
-            rolled[r][c] = matrix[r][c - r]
-
-    return rolled
+    return rolled_left_T, rolled_right_T
 
 
 if __name__ == '__main__':
