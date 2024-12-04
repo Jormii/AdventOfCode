@@ -15,7 +15,6 @@ XMAS_LEN = len(XMAS)
 XMAS_REV = list(reversed(XMAS))
 
 
-
 def main() -> int:
     t = time.perf_counter()
 
@@ -48,13 +47,13 @@ def find(matrix: MatrixT) -> int:
     rows = len(matrix)
     columns = len(matrix[0])
     for r in range(rows):
-        for c in range(columns):
+        for c in range(columns - XMAS_LEN+1):
             element = matrix[r][c]
 
-            if element == XMAS[0]:
-                total += matrix[r][c:c+XMAS_LEN] == XMAS
-            elif element == XMAS_REV[0]:
-                total += matrix[r][c:c+XMAS_LEN] == XMAS_REV
+            if element == XMAS[0] and matrix[r][c:c+XMAS_LEN] == XMAS:
+                total += 1
+            elif element == XMAS_REV[0] and matrix[r][c:c+XMAS_LEN] == XMAS_REV:
+                total += 1
 
     return total
 

@@ -30,25 +30,20 @@ def main() -> int:
     left_found = find(rolled_left_T)
     right_found = find(rolled_right_T)
 
-    rows = len(matrix)
     columns = len(matrix[0])
-    crosses: Set[Tuple[int, int]] = set()
+    centers: Set[Tuple[int, int]] = set()
     for (c, r) in left_found:
         # 'A'^T ("for (c, r) in ..." instead of "for (r, c) in ...") and unroll
-        r %= rows
         c = (c + r) % columns
 
-        crosses.add((r, c))
+        centers.add((r, c))
 
     for (c, r) in right_found:
         # 'A'^T ("for (c, r) in ..." instead of "for (r, c) in ...") and unroll
-        r %= rows
         c = (c - r) % columns
 
-        if (r, c) in crosses:
+        if (r, c) in centers:
             total += 1
-        else:
-            crosses.add((r, c))
 
     tf = time.perf_counter()
 
@@ -65,7 +60,7 @@ def find(matrix: MatrixT) -> FindRetT:
     rows = len(matrix)
     columns = len(matrix[0])
     for r in range(rows):
-        for c in range(columns):
+        for c in range(columns - MAS_LEN+1):
             element = matrix[r][c]
 
             if element == MAS[0] and matrix[r][c:c+MAS_LEN] == MAS:
