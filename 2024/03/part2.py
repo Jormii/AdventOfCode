@@ -3,8 +3,15 @@ import re
 import sys
 import time
 
-SOLUTION = 103811193
-INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'input.txt')
+BIGBOY = False
+
+if not BIGBOY:
+    SOLUTION = 103811193
+    INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'input.txt')
+else:
+    # TODO: Apparently the solution is wrong
+    SOLUTION = 748337990746
+    INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'bigboy.txt')
 
 
 def main() -> int:
@@ -23,17 +30,17 @@ def main() -> int:
         enabled = True
 
         for line in fd.readlines():
-            enable_insts = [(m.span()[0], True)
+            enable_insts = [(m.start(), True)
                             for m in DO_PATTERN.finditer(line)]
-            enable_insts.extend([(m.span()[0], False)
+            enable_insts.extend([(m.start(), False)
                                 for m in DONT_PATTERN.finditer(line)])
 
             enable_insts.sort()
-            enable_insts.append((sys.maxsize, enable_insts[-1][1]))
+            enable_insts.append((sys.maxsize, enabled))
 
             enable_insts_idx = 0
             for mul_inst in MUL_PATTERN.finditer(line):
-                begin = mul_inst.span()[0]
+                begin = mul_inst.start()
                 while enable_insts[enable_insts_idx][0] < begin:
                     enabled = enable_insts[enable_insts_idx][1]
                     enable_insts_idx += 1

@@ -3,8 +3,14 @@ import sys
 import time
 from typing import Dict
 
-SOLUTION = 29379307
-INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'input.txt')
+BIGBOY = False
+
+if not BIGBOY:
+    SOLUTION = 29379307
+    INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'input.txt')
+else:
+    SOLUTION = 112445724586901
+    INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'bigboy.txt')
 
 
 def main() -> int:

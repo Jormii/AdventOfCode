@@ -4,8 +4,14 @@ import sys
 import time
 from typing import List, Tuple
 
-SOLUTION = 2378
-INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'input.txt')
+BIGBOY = False
+
+if not BIGBOY:
+    SOLUTION = 2378
+    INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'input.txt')
+else:
+    SOLUTION = 7025140
+    INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'bigboy.txt')
 
 
 MatrixT = List[List[int]]

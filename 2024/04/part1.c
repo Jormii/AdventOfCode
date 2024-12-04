@@ -13,7 +13,10 @@
 #else
 //
 #define INPUT "bigboy.txt"
-#define SOLUTION (-1)
+#define SOLUTION (7025140)
+
+#define ROWS (15000)
+#define COLUMNS (15000 + 1)
 #endif
 
 #define XMAS_LEN (4)

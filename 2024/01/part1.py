@@ -2,8 +2,14 @@ import os
 import sys
 import time
 
-SOLUTION = 3246517
-INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'input.txt')
+BIGBOY = False
+
+if not BIGBOY:
+    SOLUTION = 3246517
+    INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'input.txt')
+else:
+    SOLUTION = 70030075280
+    INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'bigboy.txt')
 
 
 def main() -> int:
