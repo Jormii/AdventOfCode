@@ -9,7 +9,7 @@ if not BIGBOY:
     SOLUTION = 4578
     INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'input.txt')
 else:
-    SOLUTION = -1
+    SOLUTION = 14346279
     INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'bigboy.txt')
 
 RulesT = Dict[int, Set[int]]
@@ -26,8 +26,7 @@ def main() -> int:
             if line == '\n':
                 break
 
-            left = int(line[:2])
-            right = int(line[3:5])
+            left, right = map(int, line.split('|'))
 
             if right not in rules_inv:
                 rules_inv[right] = {left}
@@ -35,7 +34,7 @@ def main() -> int:
                 rules_inv[right].add(left)
 
         for line in lines[i+1:]:
-            page_numbers = list(map(int, line.strip().split(',')))
+            page_numbers = list(map(int, line.split(',')))
 
             ordered = True
             for i in range(len(page_numbers) - 1):
