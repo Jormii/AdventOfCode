@@ -1,7 +1,8 @@
 import os
 import sys
 import time
-from typing import Set, Tuple
+from typing import List
+from bisect import bisect
 
 BIGBOY = False
 
@@ -11,8 +12,6 @@ if not BIGBOY:
 else:
     SOLUTION = -1
     INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'bigboy.txt')
-
-PointT = Tuple[int, int]
 
 DIRECTIONS = [
     (-1, 0),    # Up
@@ -25,44 +24,81 @@ DIRECTIONS = [
 def main() -> int:
     t = time.perf_counter()
 
-    guard_row = 0
-    guard_col = 0
-    obstacles: Set[PointT] = set()
-
     with open(INPUT_FILE) as fd:
-        for r, line in enumerate(fd.readlines()):
-            for c, char in enumerate(line):
-                match char:
-                    case '#':
-                        obstacles.add((r, c))
-                    case '^':
-                        guard_row = r
-                        guard_col = c
+        lines = fd.readlines()
 
-    rows = r + 1    # r= Index of last row
-    cols = c        # c= Index of \n
+    guard_row = -1
+    guard_col = -1
 
-    visited: Set[PointT] = set()
+    rows = len(lines)
+    cols = len(lines[0]) - 1
+    in_row: List[List[int]] = [[] for _ in range(rows)]
+    in_column: List[List[int]] = [[] for _ in range(cols)]
 
-    direction_idx = 0
-    dr, dc = DIRECTIONS[direction_idx]
-    while 0 <= guard_row < rows and 0 <= guard_col < cols:
-        visited.add((guard_row, guard_col))
+    for r, line in enumerate(lines):
+        for c, char in enumerate(line.strip()):
+            if char == '^':
+                guard_row = r
+                guard_col = c
+            elif char == '#':
+                in_row[r].append(c)
+                in_column[c].append(r)
 
-        next_guard_row = guard_row + dr
-        next_guard_col = guard_col + dc
-        while ((next_guard_row, next_guard_col)) in obstacles:
-            direction_idx += 1
-            if direction_idx == len(DIRECTIONS):
-                direction_idx = 0
+    inside_map = True
+    direction_idx = 0  # Up
+    visited = {(guard_row, guard_col)}
+    while inside_map:
+        if direction_idx == 0:
+            # Up
+            arr = in_column[guard_col]
+            idx = bisect(arr, guard_row)
 
-            dr, dc = DIRECTIONS[direction_idx]
+            if idx == 0:
+                inside_map = False
+                steps = guard_row + 1
+            else:
+                steps = guard_row - arr[idx - 1]
+        elif direction_idx == 1:
+            # Right
+            arr = in_row[guard_row]
+            idx = bisect(arr, guard_col)
 
-            next_guard_row = guard_row + dr
-            next_guard_col = guard_col + dc
+            if idx == len(arr):
+                inside_map = False
+                steps = rows - guard_col
+            else:
+                steps = arr[idx] - guard_col
+        elif direction_idx == 2:
+            # Down
+            arr = in_column[guard_col]
+            idx = bisect(arr, guard_row)
 
-        guard_row = next_guard_row
-        guard_col = next_guard_col
+            if idx == len(arr):
+                inside_map = False
+                steps = cols - guard_row
+            else:
+                steps = arr[idx] - guard_row
+        elif direction_idx == 3:
+            # Left
+            arr = in_row[guard_row]
+            idx = bisect(arr, guard_col)
+
+            if idx == 0:
+                inside_map = False
+                steps = guard_col + 1
+            else:
+                steps = guard_col - arr[idx - 1]
+
+        vr, vc = DIRECTIONS[direction_idx]
+        for _ in range(steps - 1):  # -1 to not step into an obstacle
+            guard_row += vr
+            guard_col += vc
+            visited.add((guard_row, guard_col))
+
+        if direction_idx != 3:
+            direction_idx += 1  # Up -> Right -> Down -> Left
+        else:
+            direction_idx = 0   # Left -> Up
 
     visited_count = len(visited)
 
