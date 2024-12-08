@@ -40,13 +40,13 @@ def main() -> int:
                         guard_col = c
 
     rows = r + 1    # r= Index of last row
-    columns = c     # c= Index of \n
+    cols = c        # c= Index of \n
 
     visited: Set[PointT] = set()
 
     direction_idx = 0
     dr, dc = DIRECTIONS[direction_idx]
-    while 0 <= guard_row < rows and 0 <= guard_col < columns:
+    while 0 <= guard_row < rows and 0 <= guard_col < cols:
         visited.add((guard_row, guard_col))
 
         next_guard_row = guard_row + dr
