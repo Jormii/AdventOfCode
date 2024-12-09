@@ -12,7 +12,7 @@ if not BIGBOY:
     SOLUTION = 6408966547049
     INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'input.txt')
 else:
-    SOLUTION = -1
+    SOLUTION = 70351090993107482
     INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'bigboy.txt')
 
 
@@ -38,6 +38,7 @@ def main() -> int:
         id = 0
         off = 0
         is_file = True
+
         for size in map(int, fd.readline()):
             if is_file:
                 files.append(File(id, off, size))
