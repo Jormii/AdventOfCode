@@ -9,10 +9,15 @@ if not BIGBOY:
     SOLUTION = 709
     INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'input.txt')
 else:
-    SOLUTION = -1
+    SOLUTION = 433087
     INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'bigboy.txt')
 
 PointT = Tuple[int, int]
+
+ZERO = ord('0')
+ONE = ord('1')
+TWO = ord('2')
+NINE = ord('9')
 
 
 def main() -> int:
@@ -22,15 +27,13 @@ def main() -> int:
     topography: List[List[int]] = []
     with open(INPUT_FILE) as fd:
         for r, line in enumerate(fd.readlines()):
-            row = list(map(int, line.strip()))
+            row = list(map(ord, line.strip()))
 
-            for c, height in enumerate(row):
-                if height == 0:
-                    zeros.append((r, c))
             topography.append(row)
+            zeros.extend((r, c) for c, h in enumerate(row) if h == ZERO)
 
     rows = r + 1
-    cols = c + 1
+    cols = len(row)
     trailheads_scores_sum = 0
 
     V = [
@@ -45,9 +48,9 @@ def main() -> int:
         for (vr, vc) in V:
             r = r0 + vr
             c = c0 + vc
-            if 0 <= r < rows and 0 <= c < cols and topography[r][c] == 1:
+            if 0 <= r < rows and 0 <= c < cols and topography[r][c] == ONE:
                 hike_trailheads = _hike(
-                    r, c, 2,
+                    r, c, TWO,
                     rows, cols, topography, V, cache
                 )
 
@@ -82,7 +85,7 @@ def _hike(
         r = rh + vr
         c = ch + vc
         if 0 <= r < rows and 0 <= c < cols and topography[r][c] == height:
-            if height == 9:
+            if height == NINE:
                 trailheads.add((r, c))
             else:
                 hike_trailheads = _hike(
