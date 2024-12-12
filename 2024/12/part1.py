@@ -4,13 +4,14 @@ import time
 from dataclasses import dataclass
 from typing import Dict, List, Tuple
 
-BIGBOY = False
+BIGBOY = True
 
 if not BIGBOY:
     SOLUTION = 1431316
     INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'input.txt')
 else:
-    SOLUTION = -1
+    SOLUTION = 1051734590
+    # SOLUTION = 653966888 (PART 2)
     INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'bigboy.txt')
 
 
