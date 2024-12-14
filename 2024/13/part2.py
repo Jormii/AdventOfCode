@@ -3,7 +3,6 @@ import re
 import sys
 import time
 import math
-from typing import Tuple
 
 BIGBOY = False
 
@@ -13,9 +12,6 @@ if not BIGBOY:
 else:
     SOLUTION = -1
     INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'bigboy.txt')
-
-
-PointT = Tuple[int, int]
 
 
 def main() -> int:
