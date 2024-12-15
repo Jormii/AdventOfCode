@@ -10,7 +10,7 @@ if not BIGBOY:
     SOLUTION = 1463512
     INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'input.txt')
 else:
-    SOLUTION = -1
+    SOLUTION = 356166839889
     INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'bigboy.txt')
 
 
