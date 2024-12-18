@@ -1,9 +1,8 @@
 import os
-import re
 import sys
 import time
 import heapq
-from typing import Set, Tuple
+from typing import List, Set, Tuple
 from dataclasses import dataclass
 
 BIGBOY = False
@@ -22,7 +21,7 @@ class AStarNode:
     y: int
     cost: int
     f: int
-    path: Set['PointT']
+    path: List['PointT']
 
     def __lt__(self, other: 'AStarNode') -> bool:
         return self.f < other.f
@@ -45,24 +44,41 @@ HEIGHT = GOAL[0] + 1
 def main() -> int:
     t = time.perf_counter()
 
-    PATTERN = re.compile(r'^(\d+),(\d+)$')
-
     with open(INPUT_FILE) as fd:
         lines = fd.readlines()
 
     memory: Set[PointT] = set()
-    assert (path := search_memory(memory)) is not None
+    assert (path := search_memory((0, 0), GOAL, memory)) is not None
+
+    path_dict = {p: i for i, p in enumerate(path)}
 
     for line in lines:
-        assert (search := PATTERN.search(line.strip())) is not None
-
-        x, y = map(int, search.groups())
+        x, y = map(int, line.split(','))
         memory.add((x, y))
 
-        if (x, y) in path:
-            path = search_memory(memory)
-            if path is None:
-                break
+        if (x, y) in path_dict:
+            idx = path_dict[x, y]
+            assert idx != 0 and (idx + 1) != len(path)
+
+            bridge = search_memory(path[idx - 1], path[idx + 1], memory)
+            if bridge is None:
+                path = search_memory((0, 0), GOAL, memory)
+                if path is None:
+                    break
+
+                path_dict = {p: i for i, p in enumerate(path)}
+            else:
+                head = idx - 1
+                tail = idx + 1
+                for (x, y) in bridge:
+                    if (x, y) in path_dict:
+                        idx = path_dict[x, y]
+                        head = min(head, idx)
+                        tail = max(tail, idx)
+
+                path = path[:head] + bridge + path[tail+1:]
+                path_dict = {p: i for i, p in enumerate(path)}
+                assert len(path) == len(path_dict)
 
     solution = f'{x},{y}'
 
@@ -75,9 +91,11 @@ def main() -> int:
     return 0 if success else 1
 
 
-def search_memory(memory: Set[PointT]) -> Set[PointT] | None:
+def search_memory(start: PointT, goal: PointT, memory: Set[PointT]) -> List[PointT] | None:
     visited: Set[PointT] = set()
-    heap = [AStarNode(0, 0, 0, GOAL[0]+GOAL[1], {(0, 0)})]
+
+    x, y = start
+    heap = [AStarNode(x, y, 0, 0, [start])]
     while len(heap) != 0:
         node = heapq.heappop(heap)
 
@@ -86,7 +104,7 @@ def search_memory(memory: Set[PointT]) -> Set[PointT] | None:
         cost = node.cost
         path = node.path
 
-        if (x, y) == GOAL:
+        if (x, y) == goal:
             return path
 
         if (x, y) in visited:
@@ -99,8 +117,8 @@ def search_memory(memory: Set[PointT]) -> Set[PointT] | None:
 
             if 0 <= x_ < WIDTH and 0 <= y_ < HEIGHT and (x_, y_) not in memory and (x_, y_) not in visited:
                 cost_ = cost + 1
-                h = GOAL[0]-x_ + GOAL[1]-y_
-                path_ = path.union(((x_, y_), ))
+                h = goal[0]-x_ + goal[1]-y_
+                path_ = path + [(x_, y_), ]
 
                 heapq.heappush(heap, AStarNode(x_, y_, cost_, cost_ + h, path_))  # nopep8
 

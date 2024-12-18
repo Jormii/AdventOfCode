@@ -1,5 +1,4 @@
 import os
-import re
 import sys
 import time
 import heapq
@@ -45,19 +44,15 @@ HEIGHT = GOAL[0] + 1
 def main() -> int:
     t = time.perf_counter()
 
-    PATTERN = re.compile(r'^(\d+),(\d+)$')
-
     memory: Set[PointT] = set()
     with open(INPUT_FILE) as fd:
         lines = fd.readlines()
         for i in range(KILOBYTE):
-            assert (search := PATTERN.search(lines[i].strip())) is not None
-
-            x, y = map(int, search.groups())
+            x, y = map(int, lines[i].split(','))
             memory.add((x, y))
 
     visited: Set[PointT] = set()
-    heap = [AStarNode(0, 0, 0, GOAL[0]+GOAL[1])]
+    heap = [AStarNode(0, 0, 0, 0)]
     while True:
         node = heapq.heappop(heap)
 
