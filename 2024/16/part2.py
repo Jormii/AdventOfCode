@@ -3,12 +3,12 @@ import sys
 import time
 import heapq
 from dataclasses import dataclass
-from typing import Set, Tuple
+from typing import Dict, List, Set, Tuple
 
 BIGBOY = False
 
 if not BIGBOY:
-    SOLUTION = 83432
+    SOLUTION = 467
     INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'input.txt')
 else:
     SOLUTION = -1
@@ -21,6 +21,7 @@ class HeapItem:
     c: int
     dir: int
     cost: int
+    path: List['PointT']
 
     def __lt__(self, other: 'HeapItem') -> bool:
         return self.cost < other.cost
@@ -57,8 +58,9 @@ def main() -> int:
                     paths.add((r, c))
 
     dir = 1
-    visited: Set[PointT] = set()
-    heap = [HeapItem(rr, rc, dir, cost=0)]
+    costs: Dict[PointT, Tuple[int, int]] = {}
+    joints: Dict[PointT, List[List[PointT]]] = {}
+    heap = [HeapItem(rr, rc, dir, cost=0, path=[(rr, rc)])]
     while len(heap) != 0:
         item = heapq.heappop(heap)
 
@@ -66,10 +68,25 @@ def main() -> int:
         c = item.c
         dir = item.dir
         cost = item.cost
+        path = item.path
 
-        if (r, c) in visited:
+        if (r, c) in costs:
+            add_joint = False
+            dir_, cost_ = costs[r, c]
+            if max(dir, dir_) - min(dir, dir_) == 2:
+                add_joint = cost - cost_ <= 2  # Straight
+            else:
+                add_joint = cost - cost_ == 1000  # L-Turn
+
+            if add_joint:
+                if (r, c) not in joints:
+                    joints[r, c] = [path]
+                else:
+                    joints[r, c].append(path)
+
             continue
-        visited.add((r, c))
+
+        costs[r, c] = (dir, cost)
 
         if r == er and c == ec:
             break
@@ -89,13 +106,33 @@ def main() -> int:
 
             if (r_, c_) in paths:
                 cost_ = cost+1 + (0 if dir_ == dir else 1000)
-                heapq.heappush(heap, HeapItem(r_, c_, dir_, cost_))
+                path_ = path + [(r_, c_)]
+
+                heapq.heappush(heap, HeapItem(r_, c_, dir_, cost_, path_))
+
+    best_path = set(path)
+
+    added_any = True
+    joints_keys = list(joints.keys())
+    while added_any and len(joints_keys) != 0:
+        added_any = False
+
+        for i in reversed(range(len(joints_keys))):
+            r, c = joints_keys[i]
+            if (r, c) not in best_path:
+                continue
+
+            for path in joints[r, c]:
+                best_path.update(path)
+
+            added_any = True
+            del joints_keys[i]
 
     tf = time.perf_counter()
 
-    success = cost == SOLUTION
+    success = len(best_path) == SOLUTION
     print(tf - t, file=sys.stderr)
-    print(f'Solution: {cost} ({success})')
+    print(f'Solution: {len(best_path)} ({success})')
 
     return 0 if success else 1
 
