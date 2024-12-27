@@ -1,7 +1,7 @@
 import os
 import sys
 import time
-from typing import Dict, List
+from typing import Dict, Set
 
 BIGBOY = False
 
@@ -23,17 +23,17 @@ def main() -> int:
         designs = list(map(lambda ln: ln.strip(), lines[2:]))
 
     key_len = min(map(len, patterns))
-    slotted_patterns: Dict[str, Dict[int, List[str]]] = {}
+    slotted_patterns: Dict[str, Dict[int, Set[str]]] = {}
     for pattern in patterns:
         head, tail = pattern[:key_len], pattern[key_len:]
 
         tail_len = len(tail)
         if head not in slotted_patterns:
-            slotted_patterns[head] = {tail_len: [tail]}
+            slotted_patterns[head] = {tail_len: {tail}}
         elif tail_len not in slotted_patterns[head]:
-            slotted_patterns[head][tail_len] = [tail]
+            slotted_patterns[head][tail_len] = {tail}
         else:
-            slotted_patterns[head][tail_len].append(tail)
+            slotted_patterns[head][tail_len].add(tail)
 
     possible = 0
     for design in designs:
@@ -51,7 +51,7 @@ def main() -> int:
 def is_possible(
         design: str,
         key_len: int,
-        slotted_patterns: Dict[str, Dict[int, List[str]]],
+        slotted_patterns: Dict[str, Dict[int, Set[str]]],
 ) -> bool:
     if len(design) == 0:
         return True
@@ -61,11 +61,10 @@ def is_possible(
         return False
 
     for tail_len, tails in slotted_patterns[head].items():
-        substr = design[key_len:key_len+tail_len]
-        remaining_design = design[key_len+tail_len:]
-
-        for tail in tails:
-            if substr == tail and is_possible(remaining_design, key_len, slotted_patterns):
+        tail = design[key_len:key_len+tail_len]
+        if tail in tails:
+            remaining_design = design[key_len+tail_len:]
+            if is_possible(remaining_design, key_len, slotted_patterns):
                 return True
 
     return False
