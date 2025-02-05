@@ -1,0 +1,14 @@
+Solution: 70351090993107482 (True)
+         2112649 function calls (2112642 primitive calls) in 2.254 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.895    0.895    2.221    2.221 part2_heap.py:42(main)
+   500000    0.566    0.000    0.566    0.000 part2_heap.py:65(<listcomp>)
+   500001    0.305    0.000    0.305    0.000 {built-in method builtins.sorted}
+        1    0.038    0.038    0.153    0.153 {built-in method builtins.sum}
+        1    0.131    0.131    0.131    0.131 part2_heap.py:49(<listcomp>)
+   500001    0.115    0.000    0.115    0.000 part2_heap.py:79(<genexpr>)
+   267924    0.102    0.000    0.102    0.000 {built-in method _heapq.heappop}
+   344075    0.067    0.000    0.067    0.000 {built-in method _heapq.heappush}

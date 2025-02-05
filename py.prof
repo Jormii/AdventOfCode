@@ -1,0 +1,15 @@
+Solution: 70351090993107482 (True)
+         7380916 function calls (7380909 primitive calls) in 3.091 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    2.256    2.256    3.061    3.061 part2.py:42(main)
+  4500000    0.393    0.000    0.393    0.000 part2.py:68(<lambda>)
+   267924    0.101    0.000    0.101    0.000 {built-in method _heapq.heappop}
+   500000    0.084    0.000    0.084    0.000 part2.py:25(__init__)
+   344066    0.069    0.000    0.069    0.000 {built-in method _heapq.heappush}
+   500000    0.054    0.000    0.054    0.000 {built-in method builtins.sum}
+   267924    0.039    0.000    0.039    0.000 part2.py:37(__init__)
+   500000    0.032    0.000    0.032    0.000 {method 'keys' of 'dict' objects}
+   500000    0.031    0.000    0.031    0.000 {method 'append' of 'list' objects}

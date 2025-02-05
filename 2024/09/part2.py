@@ -2,11 +2,10 @@ from __future__ import annotations
 import os
 import sys
 import time
-from bisect import insort
+import heapq
 from typing import Dict, List
-from dataclasses import dataclass
 
-BIGBOY = False
+BIGBOY = True
 
 if not BIGBOY:
     SOLUTION = 6408966547049
@@ -16,17 +15,28 @@ else:
     INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'bigboy.txt')
 
 
-@dataclass
 class File:
     id: int
     off: int
     size: int
 
+    __slots__ = ['id', 'off', 'size']
 
-@dataclass
+    def __init__(self, id: int, off: int, size: int) -> None:
+        self.id = id
+        self.off = off
+        self.size = size
+
+
 class FreeSpace:
     off: int
     size: int
+
+    __slots__ = ['off', 'size']
+
+    def __init__(self, off: int, size: int) -> None:
+        self.off = off
+        self.size = size
 
 
 def main() -> int:
@@ -48,7 +58,7 @@ def main() -> int:
             elif size not in free_spaces:
                 free_spaces[size] = [off]
             else:
-                free_spaces[size].append(off)
+                heapq.heappush(free_spaces[size], off)
 
             off += size
             is_file = not is_file
@@ -74,15 +84,13 @@ def main() -> int:
         bin = free_spaces[free_space.size]
         size = free_space.size - file.size
 
-        del bin[0]
-        if len(bin) == 0:
-            del free_spaces[free_space.size]
-
+        heapq.heappop(bin)
+        
         if size != 0:
             if size not in free_spaces:
                 free_spaces[size] = [free_space.off + file.size]
             else:
-                insort(free_spaces[size], free_space.off + file.size)
+                heapq.heappush(free_spaces[size], free_space.off + file.size)
 
     checksum = 0
     for file in files:

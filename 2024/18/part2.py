@@ -14,6 +14,7 @@ else:
     SOLUTION = '-1'
     INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'bigboy.txt')
 
+# https://topaz.github.io/paste/#XQAAAQDfAQAAAAAAAAAzHIoib6pRzyfA3vvMmTvx5m4DtLDvEv8xRFiT/iYBaijO1XCmDCtq4RWMxJbduxJUye0f5QqOSQR4aMoeUjQLeaMUi8bOMrbuAEyBc2Xm/IAnk3puGiA1nW2zXC66mrKIkkz6VFp7C2rlx9c+ZTQ8FoDnYs3mE81oyT1Za/Ie8LDObuWTfA5qiXPBCJGLYxoIl8FSftzLsko140QCB64SBa3ai7nvNThezHHA9qGYzIip9gOjyN/AhTEA4M80+3FpbscBrc7FDa08+e2y5cTw7Gdwsmin+QmNlXVOn2rP3jNKMXsFfYS/eSZj5MRjBdzAdstVrUI7i5/OoAAwu0xD6Gou0r6h7/DIsOfltqIA0edgjoGdFTMIU23+0V5D
 
 @dataclass(slots=True, frozen=True)
 class AStarNode:

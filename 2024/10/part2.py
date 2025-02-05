@@ -1,9 +1,10 @@
 import os
 import sys
 import time
-from typing import Dict, List, Tuple
+from typing import List, Tuple
+from dataclasses import dataclass
 
-BIGBOY = False
+BIGBOY = True
 
 if not BIGBOY:
     SOLUTION = 1326
@@ -11,6 +12,13 @@ if not BIGBOY:
 else:
     SOLUTION = 624588
     INPUT_FILE = os.path.join(os.path.split(__file__)[0], 'bigboy.txt')
+
+
+@dataclass(slots=True, repr=False, eq=False)
+class Cell:
+    height: int
+    trailheads: int = -1
+
 
 PointT = Tuple[int, int]
 
@@ -24,13 +32,18 @@ def main() -> int:
     t = time.perf_counter()
 
     zeros: List[PointT] = []
-    topography: List[List[int]] = []
+    topography: List[List[Cell]] = []
     with open(INPUT_FILE) as fd:
         for r, line in enumerate(fd.readlines()):
-            row = list(map(ord, line.strip()))
+            row: List[Cell] = []
+
+            for c, height in enumerate(map(ord, line.strip())):
+                row.append(Cell(height))
+
+                if height == ZERO:
+                    zeros.append((r, c))
 
             topography.append(row)
-            zeros.extend((r, c) for c, h in enumerate(row) if h == ZERO)
 
     rows = r + 1
     cols = len(row)
@@ -42,17 +55,12 @@ def main() -> int:
         (0, -1),
         (-1, 0),
     ]
-    cache: Dict[PointT, int] = {}
     for (r0, c0) in zeros:
         for (vr, vc) in V:
             r = r0 + vr
             c = c0 + vc
-            if 0 <= r < rows and 0 <= c < cols and topography[r][c] == ONE:
-                hike_trailheads = _hike(
-                    r, c, TWO,
-                    rows, cols, topography, V, cache
-                )
-
+            if 0 <= r < rows and 0 <= c < cols and topography[r][c].height == ONE:
+                hike_trailheads = _hike(r, c, TWO, rows, cols, topography, V)
                 trailheads_scores_sum += hike_trailheads
 
     tf = time.perf_counter()
@@ -70,9 +78,8 @@ def _hike(
         height: int,
         rows: int,
         cols: int,
-        topography: List[List[int]],
+        topography: List[List[Cell]],
         V: List[PointT],
-        cache: Dict[PointT, int],
 ) -> int:
     # NOTE: (Not reflected, but)
     # - Apparently it's faster to call the function an additional time
@@ -82,28 +89,24 @@ def _hike(
     #           {if cond: return}
     #           {if other_cond: return}
 
-    if (rh, ch) in cache:
-        return cache[rh, ch]
+    cell = topography[rh][ch]
+    if cell.trailheads != -1:
+        return cell.trailheads
 
-    trailheads = 0
+    cell.trailheads = 0
+
     for (vr, vc) in V:
         r = rh + vr
         c = ch + vc
-        if 0 <= r < rows and 0 <= c < cols and topography[r][c] == height:
+        if 0 <= r < rows and 0 <= c < cols and topography[r][c].height == height:
             if height == NINE:
-                trailheads += 1
+                cell.trailheads += 1
             else:
                 hike_trailheads = _hike(
-                    r, c, height + 1,
-                    rows, cols, topography, V, cache
-                )
+                    r, c, height + 1, rows, cols, topography, V)
+                cell.trailheads += hike_trailheads
 
-                trailheads += hike_trailheads
-
-    cache[rh, ch] = trailheads
-
-    return trailheads
-
+    return cell.trailheads
 
 if __name__ == '__main__':
     exit(main())

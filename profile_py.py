@@ -3,15 +3,15 @@ import re
 import subprocess
 from subprocess import PIPE
 
-DAY = 1
+DAY = 21
 YEAR = 2024
 EXECUTIONS = 100
 
-assert os.name == 'posix'
+# assert os.name == 'posix'
 
 print(f'--- {DAY} / {YEAR} ---')
 
-for part in [1, 2]:
+for part in [2]:
     RUN_ARGS = ['python', f'{YEAR}/{DAY:02}/part{part}.py']
 
     print(f'Part {part}: ', end='')
